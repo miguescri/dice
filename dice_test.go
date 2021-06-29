@@ -64,7 +64,7 @@ func TestDice_SumN(t *testing.T) {
 
 func BenchmarkDice_Roll(b *testing.B) {
 	sides := 6
-	d := Dice{sides}
+	d, _ := NewDice(sides)
 	for i := 0; i < b.N; i++ {
 		_ = d.Roll()
 	}
@@ -72,7 +72,7 @@ func BenchmarkDice_Roll(b *testing.B) {
 
 func benchmarkDice_RollN(n int, b *testing.B) {
 	sides := 6
-	d := Dice{sides}
+	d, _ := NewDice(sides)
 	for i := 0; i < b.N; i++ {
 		_ = d.RollN(n)
 	}
@@ -84,7 +84,7 @@ func BenchmarkDice_RollN100(b *testing.B) { benchmarkDice_RollN(100, b) }
 
 func benchmarkDice_SumN(n int, b *testing.B) {
 	sides := 6
-	d := Dice{sides}
+	d, _ := NewDice(sides)
 	for i := 0; i < b.N; i++ {
 		_, _ = d.SumN(n)
 	}
