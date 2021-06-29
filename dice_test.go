@@ -2,31 +2,31 @@ package dice
 
 import "testing"
 
-func TestNewDiceCorrect(t *testing.T) {
-	sides := 6
-	d, err := New(sides)
-	if err != nil {
-		t.Errorf("New failed with error: %s", err)
-	}
-	if d.sides != sides {
-		t.Errorf("Expected d.sides=%d, got %d", sides, d.sides)
-	}
-}
-
-func TestNewDiceZero(t *testing.T) {
-	sides := 0
-	_, err := New(sides)
-	if err == nil {
-		t.Errorf("New should have failed with sides = %d", sides)
-	}
-}
-
-func TestNewDiceNegative(t *testing.T) {
-	sides := -1
-	_, err := New(sides)
-	if err == nil {
-		t.Errorf("New should have failed with sides = %d", sides)
-	}
+func TestNewDice(t *testing.T) {
+	t.Run("Correct", func(t *testing.T) {
+		sides := 6
+		d, err := New(sides)
+		if err != nil {
+			t.Errorf("New failed with error: %s", err)
+		}
+		if d.sides != sides {
+			t.Errorf("Expected d.sides=%d, got %d", sides, d.sides)
+		}
+	})
+	t.Run("Zero error", func(t *testing.T) {
+		sides := 0
+		_, err := New(sides)
+		if err == nil {
+			t.Errorf("New should have failed with sides = %d", sides)
+		}
+	})
+	t.Run("Negative error", func(t *testing.T) {
+		sides := -1
+		_, err := New(sides)
+		if err == nil {
+			t.Errorf("New should have failed with sides = %d", sides)
+		}
+	})
 }
 
 func TestDice_Roll(t *testing.T) {
