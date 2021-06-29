@@ -41,12 +41,32 @@ func TestDice_Roll(t *testing.T) {
 }
 
 func TestDice_RollN(t *testing.T) {
-	sides, n := 6, 3
+	sides := 6
 	d, _ := New(sides)
-	rs := d.RollN(n)
-	if len(rs) != n {
-		t.Errorf("RollN should return %d ints, got %d", n, len(rs))
-	}
+
+	t.Run("Correct", func(t *testing.T) {
+		n := 3
+		rs := d.RollN(n)
+		if len(rs) != n {
+			t.Errorf("RollN should return %d ints, got %d", n, len(rs))
+		}
+	})
+	t.Run("N is zero", func(t *testing.T) {
+		n := 0
+		l := 0
+		rs := d.RollN(n)
+		if len(rs) != l {
+			t.Errorf("RollN should return %d ints, got %d", l, len(rs))
+		}
+	})
+	t.Run("N is negative", func(t *testing.T) {
+		n := -1
+		l := 0
+		rs := d.RollN(n)
+		if len(rs) != l {
+			t.Errorf("RollN should return %d ints, got %d", l, len(rs))
+		}
+	})
 }
 
 func TestDice_SumN(t *testing.T) {
@@ -108,6 +128,6 @@ func BenchmarkDice_SumN1(b *testing.B)   { benchmarkDice_SumNK(1, 1, b) }
 func BenchmarkDice_SumN10(b *testing.B)  { benchmarkDice_SumNK(10, 10, b) }
 func BenchmarkDice_SumN100(b *testing.B) { benchmarkDice_SumNK(100, 100, b) }
 
-func BenchmarkDice_SumN100K1(b *testing.B) { benchmarkDice_SumNK(100, 1, b) }
+func BenchmarkDice_SumN100K1(b *testing.B)  { benchmarkDice_SumNK(100, 1, b) }
 func BenchmarkDice_SumN100K10(b *testing.B) { benchmarkDice_SumNK(100, 10, b) }
 func BenchmarkDice_SumN100K50(b *testing.B) { benchmarkDice_SumNK(100, 50, b) }
