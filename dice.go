@@ -2,6 +2,7 @@ package dice
 
 import (
 	"errors"
+	"math"
 	"math/rand"
 	"sort"
 )
@@ -52,6 +53,38 @@ func (d Dice) SumNK(n, k int) (int, []int) {
 	rs := d.RollN(n)
 	s := sum(rs, k)
 	return s, rs
+}
+
+// Probability returns the probabilities of to obtain each value in [1, d.sides*k] when running SumNK(n,k)
+func (d Dice) Probability(n, k int) []float64 {
+	if n <= 0 || k <= 0 {
+		return []float64{}
+	}
+	max := d.sides * k                              // Maximum value of SumNK(n,k)
+	rolls := math.Pow(float64(d.sides), float64(n)) // Number of combinations of n dices
+	counts := make([]float64, max)                  // Number of times each sum appears
+	rs := make([]int, n)                            // Buffer to simulate the dice combinations
+
+	prob(rs, d.sides, k, n-1, counts)
+
+	// Calculate percentage for each combination
+	for i := 0; i < max; i++ {
+		counts[i] = counts[i] / rolls
+	}
+	return counts
+}
+
+// prob recursively generates every combination of n dices, calculates its sum and updates its count
+func prob(rs []int, sides, k, n int, counts []float64) {
+	if n >= 0 {
+		for v := 1; v < sides+1; v++ {
+			rs[n] = v
+			prob(rs, sides, k, n-1, counts)
+		}
+	} else {
+		s := sum(rs, k)
+		counts[s-1] = counts[s-1] + 1
+	}
 }
 
 func sum(rs []int, k int) int {
