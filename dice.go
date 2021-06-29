@@ -37,16 +37,24 @@ func (d Dice) RollN(n int) []int {
 // SumNK returns the sum of k highest results of n dice rolls, and the list of all the individual results.
 func (d Dice) SumNK(n, k int) (int, []int) {
 	rs := d.RollN(n)
-	// If the number of dices is greater than the number to take, order the list to grab the highest
+	var rsc []int // Pointer to the ordered list to sum
+
+	// Order the list if there are more dices than results to sum
 	if n > k {
-		sort.Sort(sort.Reverse(sort.IntSlice(rs)))
+		// Create a copy of the results
+		rsc = make([]int, n)
+		copy(rsc, rs)
+		// Order the list from high to low
+		sort.Sort(sort.Reverse(sort.IntSlice(rsc)))
 	} else {
+		rsc = rs
+		// Set n as the loop limit
 		k = n
 	}
 
 	s := 0
 	for i := 0; i < k; i++ {
-		s += rs[i]
+		s += rsc[i]
 	}
 	return s, rs
 }
