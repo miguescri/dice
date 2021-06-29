@@ -82,18 +82,44 @@ func TestDice_SumN(t *testing.T) {
 }
 
 func TestDice_SumNK(t *testing.T) {
-	sides, n, k := 3, 3, 2
-	max, min := sides*k, k
+	sides := 3
 	d, _ := New(sides)
-	for i := 0; i < 100; i++ {
-		s, rs := d.SumNK(n, k)
-		if s > max || s < min {
-			t.Errorf("SumNK should be > %d and < %d, got %d", min, max, s)
+
+	t.Run("Correct", func(t *testing.T) {
+		n, k := 3, 2
+		max, min := sides*k, k
+		for i := 0; i < 100; i++ {
+			s, rs := d.SumNK(n, k)
+			if s > max || s < min {
+				t.Errorf("SumNK should be > %d and < %d, got %d", min, max, s)
+			}
+			if len(rs) != n {
+				t.Errorf("SumNK should return %d ints, got %d", n, len(rs))
+			}
 		}
+	})
+	t.Run("Bigger k than n", func(t *testing.T) {
+		n, k := 2, 3
+		_, rs := d.SumNK(n, k)
 		if len(rs) != n {
 			t.Errorf("SumNK should return %d ints, got %d", n, len(rs))
 		}
+	})
+
+	fError := func(n, k, length int, t *testing.T) {
+		r, rs := d.SumNK(n, k)
+		if r != 0 {
+			t.Errorf("SumNK should return 0, got %d", r)
+		}
+		if len(rs) != length {
+			t.Errorf("SumNK should return a list len = %d, got len = %d", length, len(rs))
+		}
 	}
+
+	t.Run("N is zero", func(t *testing.T) { fError(0, 1, 0, t) })
+	t.Run("N is negative", func(t *testing.T) { fError(-1, 1, 0, t) })
+	t.Run("K is zero", func(t *testing.T) { fError(1, 0, 1, t) })
+	t.Run("K is negative", func(t *testing.T) { fError(1, -1, 1, t) })
 }
 
 func BenchmarkDice_Roll(b *testing.B) {
