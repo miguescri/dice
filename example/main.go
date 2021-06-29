@@ -7,7 +7,7 @@ import (
 
 func main() {
 	sides := 6
-	d, err := dice.NewDice(sides)
+	d, err := dice.New(sides)
 	if err != nil {
 		fmt.Println(err)
 	}

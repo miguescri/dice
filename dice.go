@@ -11,9 +11,9 @@ type Dice struct {
 	sides int
 }
 
-// NewDice creates a new Dice given a positive number of sides.
+// New creates a new Dice given a positive number of sides.
 // If sides is non-positive, returns an error.
-func NewDice(sides int) (Dice, error) {
+func New(sides int) (Dice, error) {
 	if sides <= 0 {
 		return Dice{}, errors.New("tried to make a dice with a non-positive number of sides")
 	}
