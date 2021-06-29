@@ -38,10 +38,20 @@ func (d Dice) RollN(n int) []int {
 }
 
 // SumNK returns the sum of k highest results of n dice rolls, and the list of all the individual results.
+// If k is greater than n, assumes k is n.
+// If n or k are non-positive, assumes they are zero.
 func (d Dice) SumNK(n, k int) (int, []int) {
-	rs := d.RollN(n)
-	var rsc []int // Pointer to the ordered list to sum
+	if n <= 0 {
+		return 0, []int{}
+	}
 
+	rs := d.RollN(n)
+
+	if k <= 0 {
+		return 0, rs
+	}
+
+	var rsc []int // Pointer to the ordered list to sum
 	// Order the list if there are more dices than results to sum
 	if n > k {
 		// Create a copy of the results
