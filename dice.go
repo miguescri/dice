@@ -3,6 +3,7 @@ package dice
 import (
 	"errors"
 	"math/rand"
+	"sort"
 )
 
 // Dice represents a dice with a given number of sides.
@@ -33,12 +34,24 @@ func (d Dice) RollN(n int) []int {
 	return l
 }
 
-// SumN returns the sum of n dice rolls, and the list of individual results.
-func (d Dice) SumN(n int) (int, []int) {
+// SumNK returns the sum of k highest results of n dice rolls, and the list of all the individual results.
+func (d Dice) SumNK(n, k int) (int, []int) {
 	rs := d.RollN(n)
+	// If the number of dices is greater than the number to take, order the list to grab the highest
+	if n > k {
+		sort.Sort(sort.Reverse(sort.IntSlice(rs)))
+	} else {
+		k = n
+	}
+
 	s := 0
-	for _, r := range rs {
-		s += r
+	for i := 0; i < k; i++ {
+		s += rs[i]
 	}
 	return s, rs
+}
+
+// SumN returns the sum of n dice rolls, and the list of individual results.
+func (d Dice) SumN(n int) (int, []int) {
+	return d.SumNK(n, n)
 }
